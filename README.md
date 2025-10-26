@@ -33,11 +33,13 @@ This bot handles the entire end-to-end process automatically — from reading SR
 ## 📂 Project Structure
 
 Security Deposit Bot/
+
 │
 ├── Security Deposit Bot.py # Main automation script
 ├── SR_Source.txt # Input file containing SR numbers (one per line)
 ├── Manual Guide.pdf # Project documentation
 └── chromedriver.exe # Chrome driver required for Selenium
+
 
 
 ## 📸 Error Handling
