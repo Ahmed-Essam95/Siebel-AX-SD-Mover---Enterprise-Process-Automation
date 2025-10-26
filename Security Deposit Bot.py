@@ -8,22 +8,34 @@ from selenium.webdriver.common.keys import Keys
 import openpyxl as excel
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import PatternFill, Font
-# import csv
 import time
 import string
 import os
-
 import pandas as pd
-import numpy as np
-
 import tkinter as tk
+
+# disable error.
+# ---------------------------------------------------------------------------------
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+# ---------------------------------------------------------------------------------
+chrome_options = Options()
+
+chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+chrome_options.add_argument("--log-level=3")  # Suppress most Chrome logs
+chrome_options.add_argument("--disable-logging")
+chrome_options.add_argument("--disable-notifications")
+chrome_options.add_argument("--disable-infobars")
+
+service = Service()
+# ---------------------------------------------------------------------------------
 
 # -----------------------------
 app_start_time = time.time()
 # -----------------------------
 
 # initialize the object
-SD_Robot = webdriver.Chrome()
+SD_Robot = webdriver.Chrome(service=service, options=chrome_options)
 SD_Robot.maximize_window()
 hold = WebDriverWait(SD_Robot,45)
 
@@ -70,7 +82,7 @@ Siebel_tab = ""
 def siebel_login(username,password) :
     global Siebel_tab
 
-    SD_Robot.get("Siebel URL")
+    SD_Robot.get("https://siebel-ecomm.eg01.etisalat.net/siebel/app/ecomm/enu?SWENeedContext=false&SWECmd=Logoff&SWEC=4&SWEBID=-1&SWETS=")
 
     SD_Robot.implicitly_wait(30)
 
@@ -151,7 +163,7 @@ def ax_login(username,password) :
 
     time.sleep(0.5)
     # Open a new tab using JavaScript.
-    SD_Robot.execute_script("window.open('APP URL');")
+    SD_Robot.execute_script("window.open('http://cx.etisalat.com:9001/ax_full/login');")
     time.sleep(0.5)
 
     # Switch to second tab ( AX ).
@@ -645,7 +657,7 @@ def full_ticket_cycle(SR_Num) :
 
     try:
         # Press Payment transaction.
-        WebDriverWait(SD_Robot, 5).until(EC.element_to_be_clickable((By.LINK_TEXT, "Payment transaction"))).click()
+        WebDriverWait(SD_Robot, 2).until(EC.element_to_be_clickable((By.LINK_TEXT, "Payment transaction"))).click()
         ax_spinner()
         time.sleep(1)
 
@@ -863,7 +875,7 @@ def full_ticket_cycle(SR_Num) :
         time.sleep(1)
         SD_Robot.refresh()
         time.sleep(1)
-        SD_Robot.get("APP URL")
+        SD_Robot.get("http://cx.etisalat.com:9001/ax_full/login")
 
         # Check Point To Move.
         hold.until(EC.visibility_of_element_located((By.XPATH, "//div[@id='footer']//p")))
@@ -1194,6 +1206,10 @@ print("Exiting...")
 time.sleep(3)
 SD_Robot.quit()
 time.sleep(2)
-input("Press Enter To Exit")
-print("Browser closed. Application finished.")
+input("\nPress enter to exit.")
+time.sleep(1)
+input("\nPress enter again to exit.")
+time.sleep(5)
+print("\nBrowser closed. Application finished.")
+time.sleep(3)
 # -----------------------------------------------------------------------
